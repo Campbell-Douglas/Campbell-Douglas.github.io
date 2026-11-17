@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campbell Douglas – Portfolio</title>
+<meta name="description" content="Economics and Mathematics graduate (First Class, Leeds) studying an MSc in Complex Systems and Data Modelling at King’s College London.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F7F9; --ink:#172033; --muted:#566174; --rule:#D8DCE4;
+  --accent:#2457D6; --accent-ink:#fff; --grid:#E4E8EE; --line:#8A93A3;
+  --serif:"Literata",Georgia,"Times New Roman",serif;
+  --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0E1320;--ink:#E7EBF3;--muted:#9AA4B6;--rule:#273049;--accent:#7FA6FF;--accent-ink:#0E1320;--grid:#171F33;--line:#6B7690}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 1.5rem}
+nav{display:flex;gap:1.5rem;justify-content:flex-end;flex-wrap:wrap;padding:1.25rem 0;font-size:.95rem}
+nav a{color:var(--muted);text-decoration:none}
+nav a:hover{color:var(--ink);text-decoration:underline}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:3rem;align-items:center;padding:2.5rem 0 4.5rem}
+h1{font:600 clamp(2.6rem,6vw,4.4rem)/1.05 var(--serif);letter-spacing:-.02em;margin:0 0 1rem}
+.role{font:500 1.25rem/1.4 var(--serif);margin:0 0 1.25rem}
+.hero p{max-width:34em}
+.actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.75rem}
+.btn{display:inline-block;padding:.7rem 1.2rem;border-radius:6px;font-weight:600;text-decoration:none;border:2px solid var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{color:var(--accent)}
+.btn:hover{filter:brightness(1.1)}
+figure{margin:0}
+.plot{background-color:var(--bg);border:1px solid var(--rule);border-radius:8px;padding:.5rem}
+.plot svg{display:block;width:100%;height:auto}
+figcaption{font-size:.9rem;color:var(--muted);margin-top:.75rem;line-height:1.5}
+button.replay{font:inherit;font-size:.9rem;font-weight:600;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+section{border-top:1px solid var(--rule);padding:2.5rem 0;display:grid;grid-template-columns:180px 1fr;gap:1.5rem 3rem}
+h2{font:600 1.05rem/1.4 var(--sans);margin:0;color:var(--ink)}
+h3{font:600 1.2rem/1.3 var(--serif);margin:0 0 .35rem}
+.content>*+*{margin-top:1.5rem}
+.content p{margin:0;max-width:40em}
+dl{margin:0}
+dt{font-weight:600}
+dd{margin:0 0 1.1rem;color:var(--muted);max-width:40em}
+.job{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline}
+.job strong{font-weight:600}
+.job span{color:var(--muted);font-size:.95rem}
+.content .detail{color:var(--muted);margin-top:.15rem}
+.big{font:500 1.5rem/1.3 var(--serif);word-break:break-word}
+footer{border-top:1px solid var(--rule);padding:1.5rem 0 3rem;color:var(--muted);font-size:.9rem}
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;gap:2rem;padding-bottom:3rem}
+  section{grid-template-columns:1fr;gap:1rem}
+  nav{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav aria-label="Page sections">
+    <a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#education">Education</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1>Campbell Douglas</h1>
+      <p class="role">Business analysis, data and mathematical modelling</p>
+      <p>I’m an Economics and Mathematics graduate (First Class, University of Leeds), now studying for an MSc in Complex Systems and Data Modelling at King’s College London. I’m interested in business analysis, systems design and projects that improve how organisations work.</p>
+      <div class="actions">
+        <a class="btn primary" href="mailto:camdou76@gmail.com">Email me</a>
+        <a class="btn ghost" href="Campbell_Douglas_CV.pdf">Download my CV</a>
+      </div>
+    </div>
+    <figure>
+      <div class="plot">
+        <svg id="race" viewBox="0 0 400 280" role="img" aria-label="Two balls start together at the top left. One rolls down a straight ramp, the other down a curved path to the same point at the bottom right. The ball on the curve arrives first.">
+          <defs>
+            <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern>
+          </defs>
+          <rect width="400" height="280" fill="url(#g)"/>
+          <line x1="30" y1="30" x2="370" y2="246.5" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 5"/>
+          <path id="curve" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+          <circle cx="30" cy="30" r="3" fill="var(--ink)"/><circle cx="370" cy="246.5" r="3" fill="var(--ink)"/>
+          <circle id="ballLine" r="7" fill="var(--line)"/>
+          <circle id="ballCurve" r="7" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <figcaption>The brachistochrone: the quickest path between two points under gravity is a curve, not a straight line. It was the subject of my dissertation, and the curve wins this race by about 16%. <button class="replay" id="replay" type="button">Race again</button></figcaption>
+    </figure>
+  </header>
+
+  <section id="projects">
+    <h2>Selected projects</h2>
+    <div class="content">
+      <article>
+        <h3>Econometric modelling of inflation</h3>
+        <p>Built an ARIMA model to investigate and forecast UK inflation determinants, alongside a VAR model and panel regression analysis across a group of OECD countries. Implemented the models in Stata.</p>
+      </article>
+      <article>
+        <h3>Undergraduate dissertation: the Brachistochrone problem</h3>
+        <p>Developed a classical proof of the Brachistochrone problem and compared it with more rigorous methods using the calculus of variations, looking at one problem through different mathematical approaches.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="experience">
+    <h2>Work experience</h2>
+    <div class="content">
+      <div>
+        <div class="job"><strong>Mathematics Tutor, University of Leeds</strong><span>Oct 2024 – May 2025</span></div>
+        <p class="detail">Led weekly one-hour small-group sessions for first-year mathematics students, explaining concepts and answering academic and general university questions.</p>
+      </div>
+      <div>
+        <div class="job"><strong>Gemologist (part-time), IDGL, Leeds</strong><span>Apr 2025 – Aug 2025</span></div>
+        <p class="detail">Graded diamonds and prepared written reports, which needed accuracy, consistency and close attention to detail. Answered email enquiries professionally.</p>
+      </div>
+      <div>
+        <div class="job"><strong>Assistant Tennis Coach, Hackney Tennis</strong><span>2020 – Aug 2025</span></div>
+        <p class="detail">Coached children and adults in groups of up to 10, adapting explanations and activities to different abilities. Delivered regular sessions at Grazebrook Primary School and Jubilee Primary School.</p>
+      </div>
+      <div>
+        <div class="job"><strong>Event and Catering Assistant, Joblink Leeds</strong><span>Jul 2025</span></div>
+        <p class="detail">Worked university graduation shifts as a mace-bearer and served food in the canteen.</p>
+      </div>
+      <div>
+        <div class="job"><strong>Bar and Back-of-House Staff, Vortex Jazz Club</strong><span>Feb 2023 – Aug 2023</span></div>
+        <p class="detail">Served customers, prepared seating for live events and cleared the bar and venue after performances.</p>
+      </div>
+      <div>
+        <div class="job"><strong>Volunteer, North London Action for the Homeless</strong><span>Sep 2022 – Feb 2023</span></div>
+        <p class="detail">Helped serve food and clear up after the weekly evening meal at St Paul’s Church, Hackney.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <h2>Education</h2>
+    <div class="content">
+      <div>
+        <div class="job"><strong>King’s College London</strong><span>2026 – 2027</span></div>
+        <p class="detail">MSc Complex Systems and Data Modelling (in progress)</p>
+      </div>
+      <div>
+        <div class="job"><strong>University of Leeds</strong><span>2023 – 2026</span></div>
+        <p class="detail">BSc (Hons) Economics and Mathematics, First Class</p>
+      </div>
+      <div>
+        <div class="job"><strong>Stoke Newington School and Sixth Form, London</strong><span>2016 – 2022</span></div>
+        <p class="detail">A levels: Mathematics A*, Further Mathematics A, Economics B. GCSEs: 10, including Mathematics 9, Physics 9, Chemistry 9 and Biology 8.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <dl class="content">
+      <div><dt>Analytical problem-solving</dt><dd>Mathematical reasoning, quantitative analysis and interpreting model outputs.</dd></div>
+      <div><dt>Programming and data</dt><dd>Python and R, including NumPy and Pandas. Stata for econometric modelling.</dd></div>
+      <div><dt>Quantitative methods</dt><dd>Stochastic processes, network analysis, time-series modelling and regression.</dd></div>
+      <div><dt>Communication and collaboration</dt><dd>Explaining mathematical concepts, supporting students and working with customers and colleagues.</dd></div>
+      <div><dt>Written work</dt><dd>Diamond-grading reports and customer correspondence, with close attention to detail.</dd></div>
+    </dl>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <div class="content">
+      <p class="big"><a href="mailto:camdou76@gmail.com">camdou76@gmail.com</a></p>
+      <p>Email is the best way to reach me. References are available on request.</p>
+    </div>
+  </section>
+
+  <footer>© 2026 Campbell Douglas</footer>
+</div>
+
+<script>
+(function(){
+  var ox=30, oy=30, r=340/Math.PI, PI=Math.PI;
+  var curve=document.getElementById('curve');
+  var bc=document.getElementById('ballCurve'), bl=document.getElementById('ballLine');
+  var d='';
+  for(var i=0;i<=90;i++){
+    var t=PI*i/90;
+    d+=(i?'L':'M')+(ox+r*(t-Math.sin(t))).toFixed(2)+' '+(oy+r*(1-Math.cos(t))).toFixed(2);
+  }
+  curve.setAttribute('d',d);
+
+  var DUR=2600, RATIO=Math.sqrt(PI*PI+4)/PI; // straight ramp takes about 1.19x as long
+  function place(u){
+    var th=PI*Math.min(u,1);
+    bc.setAttribute('cx',ox+r*(th-Math.sin(th)));
+    bc.setAttribute('cy',oy+r*(1-Math.cos(th)));
+    var f=Math.pow(Math.min(u/RATIO,1),2);
+    bl.setAttribute('cx',ox+340*f);
+    bl.setAttribute('cy',oy+2*r*f);
+  }
+  var raf;
+  function run(){
+    cancelAnimationFrame(raf);
+    var start=null;
+    function step(ts){
+      if(start===null) start=ts;
+      var u=(ts-start)/DUR;
+      place(u);
+      if(u<RATIO) raf=requestAnimationFrame(step); else place(RATIO);
+    }
+    place(0);
+    raf=requestAnimationFrame(step);
+  }
+  document.getElementById('replay').addEventListener('click',run);
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){ place(RATIO); } else { place(0); setTimeout(run,600); }
+})();
+</script>
+</body>
+</html>
