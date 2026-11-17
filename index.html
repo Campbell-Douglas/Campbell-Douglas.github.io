@@ -42,6 +42,10 @@ figure{margin:0}
 .plot svg{display:block;width:100%;height:auto}
 figcaption{font-size:.9rem;color:var(--muted);margin-top:.75rem;line-height:1.5}
 button.replay{font:inherit;font-size:.9rem;font-weight:600;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.plot svg{touch-action:none}
+.ball{cursor:grab;outline:none}
+.ball.grab{cursor:grabbing}
+.ball:focus-visible .vis{stroke:var(--ink);stroke-width:3}
 section{border-top:1px solid var(--rule);padding:2.5rem 0;display:grid;grid-template-columns:180px 1fr;gap:1.5rem 3rem}
 h2{font:600 1.05rem/1.4 var(--sans);margin:0;color:var(--ink)}
 h3{font:600 1.2rem/1.3 var(--serif);margin:0 0 .35rem}
@@ -81,7 +85,7 @@ footer{border-top:1px solid var(--rule);padding:1.5rem 0 3rem;color:var(--muted)
     </div>
     <figure>
       <div class="plot">
-        <svg id="race" viewBox="0 0 400 280" role="img" aria-label="Two balls start together at the top left. One rolls down a straight ramp, the other down a curved path to the same point at the bottom right. The ball on the curve arrives first.">
+        <svg id="race" viewBox="0 0 400 280" role="group" aria-label="Two balls start together at the top left. One rolls down a straight ramp, the other down a curved path to the same point at the bottom right. The ball on the curve arrives first. Both balls can be dragged back up their paths and released.">
           <defs>
             <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern>
           </defs>
@@ -89,11 +93,15 @@ footer{border-top:1px solid var(--rule);padding:1.5rem 0 3rem;color:var(--muted)
           <line x1="30" y1="30" x2="370" y2="246.5" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 5"/>
           <path id="curve" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
           <circle cx="30" cy="30" r="3" fill="var(--ink)"/><circle cx="370" cy="246.5" r="3" fill="var(--ink)"/>
-          <circle id="ballLine" r="7" fill="var(--line)"/>
-          <circle id="ballCurve" r="7" fill="var(--accent)"/>
+          <g id="ballLine" class="ball" tabindex="0" role="slider" aria-label="Ball on the straight ramp. Drag it, or use the arrow keys, to move it back up the ramp. Press Enter to let go." aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <circle r="16" fill="var(--line)" fill-opacity=".18"/><circle class="vis" r="7" fill="var(--line)"/>
+          </g>
+          <g id="ballCurve" class="ball" tabindex="0" role="slider" aria-label="Ball on the curved path. Drag it, or use the arrow keys, to move it back up the path. Press Enter to let go." aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <circle r="16" fill="var(--accent)" fill-opacity=".18"/><circle class="vis" r="7" fill="var(--accent)"/>
+          </g>
         </svg>
       </div>
-      <figcaption>The brachistochrone: the quickest path between two points under gravity is a curve, not a straight line. It was the subject of my dissertation, and the curve wins this race by about 16%. <button class="replay" id="replay" type="button">Race again</button></figcaption>
+      <figcaption>The brachistochrone: the quickest path between two points under gravity is a curve, not a straight line. It was the subject of my dissertation, and the curve wins this race by about 16%. Drag either ball back up its path and the other moves to the same height. Let go to release both together. <button class="replay" id="replay" type="button">Race again</button></figcaption>
     </figure>
   </header>
 
@@ -183,41 +191,129 @@ footer{border-top:1px solid var(--rule);padding:1.5rem 0 3rem;color:var(--muted)
 
 <script>
 (function(){
-  var ox=30, oy=30, r=340/Math.PI, PI=Math.PI;
-  var curve=document.getElementById('curve');
-  var bc=document.getElementById('ballCurve'), bl=document.getElementById('ballLine');
-  var d='';
-  for(var i=0;i<=90;i++){
-    var t=PI*i/90;
-    d+=(i?'L':'M')+(ox+r*(t-Math.sin(t))).toFixed(2)+' '+(oy+r*(1-Math.cos(t))).toFixed(2);
-  }
-  curve.setAttribute('d',d);
+  var svg=document.getElementById('race'), PI=Math.PI;
+  var ox=30, oy=30, r=340/PI, N=400;
+  var G=r*Math.pow(PI/2.6,2); // the curve takes 2.6 s from the top
 
-  var DUR=2600, RATIO=Math.sqrt(PI*PI+4)/PI; // straight ramp takes about 1.19x as long
-  function place(u){
-    var th=PI*Math.min(u,1);
-    bc.setAttribute('cx',ox+r*(th-Math.sin(th)));
-    bc.setAttribute('cy',oy+r*(1-Math.cos(th)));
-    var f=Math.pow(Math.min(u/RATIO,1),2);
-    bl.setAttribute('cx',ox+340*f);
-    bl.setAttribute('cy',oy+2*r*f);
+  function build(f){
+    var x=[],y=[],s=[0],i,p;
+    for(i=0;i<=N;i++){p=f(i/N);x.push(p[0]);y.push(p[1]);if(i)s.push(s[i-1]+Math.hypot(x[i]-x[i-1],y[i]-y[i-1]));}
+    return {x:x,y:y,s:s,L:s[N]};
   }
-  var raf;
-  function run(){
-    cancelAnimationFrame(raf);
-    var start=null;
-    function step(ts){
-      if(start===null) start=ts;
-      var u=(ts-start)/DUR;
-      place(u);
-      if(u<RATIO) raf=requestAnimationFrame(step); else place(RATIO);
-    }
-    place(0);
-    raf=requestAnimationFrame(step);
+  var curvePath=build(function(u){var t=PI*u;return [ox+r*(t-Math.sin(t)),oy+r*(1-Math.cos(t))];});
+  var linePath=build(function(u){return [ox+340*u,oy+2*r*u];});
+
+  var d='';
+  for(var i=0;i<=N;i++) d+=(i?'L':'M')+curvePath.x[i].toFixed(2)+' '+curvePath.y[i].toFixed(2);
+  document.getElementById('curve').setAttribute('d',d);
+
+  function at(path,s){
+    s=Math.max(0,Math.min(path.L,s));
+    var lo=0,hi=N;
+    while(hi-lo>1){var m=(lo+hi)>>1; if(path.s[m]<=s)lo=m; else hi=m;}
+    var seg=path.s[hi]-path.s[lo]||1, f=(s-path.s[lo])/seg;
+    return {x:path.x[lo]+f*(path.x[hi]-path.x[lo]), y:path.y[lo]+f*(path.y[hi]-path.y[lo]), slope:(path.y[hi]-path.y[lo])/seg};
   }
-  document.getElementById('replay').addEventListener('click',run);
+  function nearest(path,p){
+    var best=0,bd=1e12;
+    for(var i=0;i<=N;i++){var dx=path.x[i]-p.x,dy=path.y[i]-p.y,dd=dx*dx+dy*dy;if(dd<bd){bd=dd;best=i;}}
+    return path.s[best];
+  }
+
+  function sAtY(path,y){
+    y=Math.max(path.y[0],Math.min(path.y[N],y));
+    var lo=0,hi=N;
+    while(hi-lo>1){var m=(lo+hi)>>1; if(path.y[m]<=y)lo=m; else hi=m;}
+    var f=(y-path.y[lo])/((path.y[hi]-path.y[lo])||1);
+    return path.s[lo]+f*(path.s[hi]-path.s[lo]);
+  }
+
+  function Ball(id,path){
+    this.el=document.getElementById(id); this.path=path; this.s=0; this.v=0; this.held=false; this.dragging=false;
+    this.draw();
+  }
+  Ball.prototype.draw=function(){
+    var p=at(this.path,this.s);
+    this.el.setAttribute('transform','translate('+p.x.toFixed(2)+' '+p.y.toFixed(2)+')');
+  };
+  Ball.prototype.report=function(){
+    this.el.setAttribute('aria-valuenow',Math.round(100*this.s/this.path.L));
+  };
+
+  var balls=[new Ball('ballLine',linePath), new Ball('ballCurve',curvePath)];
+  var raf=null,last=null;
+
+  function frame(ts){
+    if(last===null) last=ts;
+    var dt=Math.min((ts-last)/1000,0.05); last=ts;
+    var moving=false;
+    balls.forEach(function(b){
+      if(b.held||b.s>=b.path.L) return;
+      var n=Math.max(1,Math.ceil(dt*240)), h=dt/n;
+      for(var k=0;k<n;k++){
+        b.v+=G*at(b.path,b.s).slope*h;
+        b.s+=b.v*h;
+        if(b.s>=b.path.L){b.s=b.path.L;b.v=0;break;}
+      }
+      moving=true; b.draw(); b.report();
+    });
+    raf=moving?requestAnimationFrame(frame):null;
+    if(!moving) last=null;
+  }
+  function kick(){ if(!raf) raf=requestAnimationFrame(frame); }
+
+  function toSvg(e){
+    var pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  // The other ball is held at the same height (same drop) as the one being moved.
+  function sync(b){
+    var o=balls[0]===b?balls[1]:balls[0];
+    o.s=sAtY(o.path,at(b.path,b.s).y); o.v=0; o.held=true; o.draw(); o.report();
+  }
+  function release(){
+    balls.forEach(function(x){x.dragging=false;x.held=false;x.el.classList.remove('grab');});
+    kick();
+  }
+
+  balls.forEach(function(b){
+    var el=b.el;
+    el.addEventListener('pointerdown',function(e){
+      e.preventDefault(); el.focus({preventScroll:true});
+      b.dragging=true; b.held=true; b.v=0; el.classList.add('grab');
+      el.setPointerCapture(e.pointerId);
+      sync(b);
+    });
+    el.addEventListener('pointermove',function(e){
+      if(!b.dragging) return;
+      b.s=nearest(b.path,toSvg(e)); b.v=0; b.draw(); b.report(); sync(b);
+    });
+    el.addEventListener('pointerup',release);
+    el.addEventListener('pointercancel',release);
+    el.addEventListener('keydown',function(e){
+      var k=e.key;
+      if(k==='ArrowUp'||k==='ArrowLeft'||k==='ArrowDown'||k==='ArrowRight'){
+        e.preventDefault();
+        var up=(k==='ArrowUp'||k==='ArrowLeft');
+        b.held=true; b.v=0;
+        b.s=Math.max(0,Math.min(b.path.L,b.s+(up?-12:12)));
+        b.draw(); b.report(); sync(b);
+      } else if(k==='Enter'||k===' '){
+        e.preventDefault(); release();
+      }
+    });
+    el.addEventListener('blur',function(){ if(b.held&&!b.dragging) release(); });
+  });
+
+  function reset(){
+    balls.forEach(function(b){b.s=0;b.v=0;b.held=false;b.dragging=false;b.draw();b.report();});
+    kick();
+  }
+  document.getElementById('replay').addEventListener('click',reset);
+
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce){ place(RATIO); } else { place(0); setTimeout(run,600); }
+  if(reduce){ balls.forEach(function(b){b.s=b.path.L;b.draw();b.report();}); }
+  else { setTimeout(reset,600); }
 })();
 </script>
 </body>
